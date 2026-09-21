@@ -12,8 +12,9 @@
 //   });
 // }
 
-
+// checks if local storage already has items
 if (!localStorage.getItem("Data")) {
+    // creates space for user to add items
     const ob = {};
     localStorage.setItem("Data", JSON.stringify(ob));
 }
@@ -47,18 +48,14 @@ const updateItem = function(formalItemName, updatedInformationName, updatedInfor
 }
 
 
-// reurns how many items the user has in their data
-const getUserItemsLength = function() {
-    const userItems = getUserItems();
-    return Object.keys(userItems).length;
-}
-
-
 
 // formats numbers to always end with two decimal places
 const formatNumber = function(number) {
+    // rounds numbers with decimal places to 2 decimal places
     number = Math.round(number*100) / 100;
+
     let numberString = String(number);
+    // ensures numbers without decimals also have two decimal points
     if (!numberString.includes(".")) {
         return `${numberString}.00`;
     } else if (numberString.indexOf(".") === numberString.length - 2) {
@@ -68,29 +65,24 @@ const formatNumber = function(number) {
 }
 
 
-// localStorage.clear();
-// const ob = {};
-// localStorage.setItem("Data", JSON.stringify(ob));
+// returns price per pound or price per 100 grams, depending on the unit
 
 /*
-===== PARAMETERS =====
-price: the best price of an item
+price: the bestPrice of an item
 quantity: the amount in the package
-unit: is the quantity measured in grams, kilograms, or pounds?
-----------------------
-returns price per pound or price per 100 grams, depending on the unit
+unit: what the quantity is measured in
 */
 const calculatePricePerUnit = function(price, quantity, unit) {
     price = Number(price);
     quantity = Number(quantity);
-    if (unit === "lbs") {
-        return formatNumber(price / quantity);
-    } else if (unit === "kg") {
+    if (unit === "kg") {
         return formatNumber(price / (quantity * 10));
-    } else if (unit === "g") {
+    } else if (unit === "g" || unit === "mL") {
         return formatNumber(price / (quantity / 100));
-    } else
-        return "N/A";
+    } else {
+        return formatNumber(price / quantity);
+    }
+
 }
 
 
@@ -127,7 +119,6 @@ const clearAddNewItemField = function() {
 // shows all of the user's items in the search bar
 const userItemOptions = function() {
     const userItems = getUserItems();
-    const userItemsLength = getUserItemsLength();
     // resets search bar's content
     searchBar.innerHTML = "<option></option>";
 
@@ -146,13 +137,14 @@ const showItem = function(formalItemName) {
     console.log(selectedItem);
 
     title.textContent = selectedItem.formalName;
-    if (selectedItem.unit !== "g") {
+    if (selectedItem.unit === "g" || selectedItem.unit === "mL") {
+        unitPriceHeading.textContent = `100${selectedItem.unit}`;
+        unitPriceUnit.textContent = `100${selectedItem.unit}`;
+    } else {
         unitPriceHeading.textContent = selectedItem.unit;
         unitPriceUnit.textContent = selectedItem.unit;
-    } else {
-        unitPriceHeading.textContent = "100g";
-        unitPriceUnit.textContent = "100g";
     }
+
     generalName.textContent = selectedItem.name;
     normalPriceNumber.textContent = selectedItem.normalPrice;
     bestPriceNumber.textContent = selectedItem.bestPrice;

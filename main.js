@@ -1,16 +1,16 @@
 // enables service worker
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then(() => {
-        console.log("Service Worker Registered");
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
-}
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker
+//       .register("./service-worker.js")
+//       .then(() => {
+//         console.log("Service Worker Registered");
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+//   });
+// }
 
 
 if (!localStorage.getItem("Data")) {

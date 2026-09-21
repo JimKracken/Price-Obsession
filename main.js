@@ -12,6 +12,10 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+if (!localStorage.getItem("Data")) {
+    const ob = {};
+    localStorage.setItem("Data", JSON.stringify(ob));
+}
 
 
 // all items recorded in local storage

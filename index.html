@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Obsession</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="manifest" href="./manifest.json">
+  </head>
+  <body>
+    <h1>Price Obsession</h1>
+    <div id="search-and-add-container">
+      <select id="search-bar"></select>
+      <button id="add-new-item">Add New Item</button>
+    </div>
+    <dialog>
+      <div>
+        <label>Formal Name: </label>
+        <input id="new-item-formal-name" placeholder="Ex: Family Farms Carrots, 3lbs">
+      </div>
+      <div>
+        <label>Name: </label>
+        <input id="new-item-name" placeholder="Ex: Carrots">
+      </div>
+      <div>
+        <label>Quantity: </label>
+        <input id="new-item-quantity" placeholder="Ex: 3">
+      </div>
+      <div>
+        <label>Unit: </label>
+        <select id="new-item-unit">
+          <option>unit</option>
+          <option>lbs</option>
+          <option>kg</option>
+          <option>g</option>
+        </select>
+      </div> 
+      <div> 
+        <label>Normal Price: </label>
+        <input id="new-item-normal-price" placeholder="4">
+      </div> 
+      <div>
+        <label>Best Price: </label>
+        <input id="new-item-best-price" placeholder="2">
+      </div>
+      <div>
+        <button id="add-new-item-btn">Add item</button>
+        <button id="cancel-btn">Cancel</button>
+      </div>
+    </dialog>
+    <div id="selected-item">
+      <h2>Family Farms Carrots, 3lb</h2>
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Normal Price</th>
+          <th>Best Price</th>
+          <th id="price-per-heading">Price Per <label>lb</label> (For Best Price)</th>
+        </thead>
+        <tbody>
+            <td id="name">Carrot</td>
+            <td id="normal-price">$<label>4.00</label></td>
+            <td id="best-price">$<label>2.00</label></td>
+            <td id="unit-price">$<label>0.67</label>/<label>lb</label></td>
+        </tbody>
+      </table>
+      <div id="buttons">
+        <div class="change-div">
+          <button id="normal-price-btn" class="change-btn">Edit Normal Price</button>
+          <div id="change-normal-price" hidden></div>
+        </div>
+        <div class="change-div">
+          <button id="best-price-btn" class="change-btn">Edit Best Price</button>
+          <div id="change-best-price" hidden></div>
+        </div>
+        <div class="change-div">
+          <button id="unit-btn" class="change-btn" disabled>Edit Unit</button>
+          <div id="change-unit" class="unit" hidden></div>
+        </div>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>

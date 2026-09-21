@@ -1,0 +1,32 @@
+{
+    "short_name": "Prices",
+    "name": "Price Obsession",
+    "icons": [
+        {
+            "src": "./icons/icon-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "./icons/icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "./index.html",
+    "display": "standalone",
+    "screenshots": [
+        {
+            "src": "./screenshots/adding-item-narrow.png",
+            "type": "image/png",
+            "sizes": "540x720",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "./screenshots/adding-item-wide.png",
+            "type": "image/png",
+            "sizes": "720x540",
+            "form_factor": "wide"
+        }
+    ]
+}

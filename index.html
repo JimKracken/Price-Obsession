@@ -13,7 +13,8 @@
       <select id="search-bar"></select>
       <button id="add-new-item">Add New Item</button>
     </div>
-    <dialog>
+    <dialog id="add-new-item-dialog">
+      <dialog id="duplicate-entry-warning"><p><label></label> already exists. Are you sure you would like to overwrite its information with this new item?</p><button id="confirm-duplicate-btn">Yes</button><button id="cancel-duplicate-btn">No</button></dialog>
       <div>
         <label>Formal Name: </label>
         <input id="new-item-formal-name" placeholder="Ex: Family Farms Carrots, 3lbs">

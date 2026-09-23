@@ -1,3 +1,15 @@
+/*
+=============================================================
+                     STUFF TO WORK ON
+=============================================================
+1. Remove starting div: stop showing the stuff about carrots
+2. Create a search bar: allow the user to type and see items with formal names that match what is in the search bar
+3. Show the best priced product for each kind of item: if a product has the best price out of all products with the 
+   same name, put a star next to it on the search bar and create a visual indicator when displaying the product
+4. Allow for comparison between units: show the price per different units
+5. Refine the GUI: make more modern
+*/
+
 // enables service worker
 // if ("serviceWorker" in navigator) {
 //   window.addEventListener("load", () => {
@@ -76,10 +88,13 @@ const calculatePricePerUnit = function(price, quantity, unit) {
     price = Number(price);
     quantity = Number(quantity);
     if (unit === "kg") {
+        // price per 100g
         return formatNumber(price / (quantity * 10));
     } else if (unit === "g" || unit === "mL") {
+        // price per 100g or 100mL
         return formatNumber(price / (quantity / 100));
     } else {
+        // price per lbs or L
         return formatNumber(price / quantity);
     }
 
@@ -92,18 +107,54 @@ const generateNewItem = function(formalName, name, quantity, unit, normalPrice, 
 }
 
 
-const addNewItemToData = function(formalName, name, quantity, unit, normalPrice, bestPrice) {
+// shows warning if user tries to create an item that has the same formal name as an existing item
+const showDuplicateEntryWarning = function(userItems, formalName) {
+    // warning dialog
+    duplicateWarningDiv.showModal();
+
+    // shows the formal name of the item being created/duplicated item
+    const duplicateItemLabel = document.querySelector("#duplicate-entry-warning label");
+    duplicateItemLabel.textContent = formalName;
+
+    // button to confirm create duplicate item
+    createDuplicateItem.addEventListener("click", () => {
+        addNewItemToData(userItems);
+        clearAddNewItemField();
+        // closes warning dialog
+        duplicateWarningDiv.close();
+    })
+
+    // button to cancel creating duplicate item
+    cancelDuplicateItem.addEventListener("click", () => {
+        duplicateWarningDiv.close();
+    })
+}
+
+
+const addNewItemToData = function(userItems) {
+    updateUserItems(userItems);
+}
+
+// checks if newly created item has the same formal name as an existing item
+const checkIfDuplicate = function(formalName, name, quantity, unit, normalPrice, bestPrice) {
     const newItem = generateNewItem(formalName, name, quantity, unit, normalPrice, bestPrice);
     let userItems = getUserItems();
-    
 
+    // prevents errors if no items are saved in data
     if (typeof userItems === "string") {
         userItems = {};
     }
-    
-    // adds new item to user's local storage
-    userItems[formalName] = newItem;
-    updateUserItems(userItems);
+
+    // checks if item exists    
+    if (userItems[formalName]) {
+        userItems[formalName] = newItem;
+        showDuplicateEntryWarning(userItems, formalName);
+    } else {
+        userItems[formalName] = newItem;
+        // adds new item to user's local storage
+        addNewItemToData(userItems);
+        clearAddNewItemField();
+    }
 }
 
 
@@ -113,6 +164,10 @@ const clearAddNewItemField = function() {
     for (const input of inputs) {
         input.value = "";
     }
+    // dialog to get information about new item
+    addNewItem.close();
+    // updates list of items in search dropdown
+    userItemOptions();
 }
 
 
@@ -134,12 +189,16 @@ const userItemOptions = function() {
 const showItem = function(formalItemName) {
     const userItems = getUserItems();
     const selectedItem = userItems[formalItemName];
-    console.log(selectedItem);
 
     title.textContent = selectedItem.formalName;
+    // display "100" before units in case of g or mL
     if (selectedItem.unit === "g" || selectedItem.unit === "mL") {
         unitPriceHeading.textContent = `100${selectedItem.unit}`;
         unitPriceUnit.textContent = `100${selectedItem.unit}`;
+    // display "100g" for kg
+    } else if (selectedItem.unit === "kg") {
+        unitPriceHeading.textContent = `100g`;
+        unitPriceUnit.textContent = '100g';
     } else {
         unitPriceHeading.textContent = selectedItem.unit;
         unitPriceUnit.textContent = selectedItem.unit;
@@ -166,7 +225,7 @@ const searchBar = document.getElementById("search-bar");
 
 // elements used to collect user input to add a new item
 const addNewItemBtn = document.getElementById("add-new-item");
-const addNewItem = document.querySelector("dialog");
+const addNewItem = document.getElementById("add-new-item-dialog");
 const newItemFormalName = document.getElementById("new-item-formal-name");
 const newItemName = document.getElementById("new-item-name");
 const newItemQuantity = document.getElementById("new-item-quantity");
@@ -175,6 +234,12 @@ const newItemNormalPrice = document.getElementById("new-item-normal-price");
 const newItemBestPrice = document.getElementById("new-item-best-price");
 const createNewItemBtn = document.getElementById("add-new-item-btn");
 const cancelNewItem = document.getElementById("cancel-btn");
+
+// show warning when two items with same formal name are being created
+const duplicateWarningDiv = document.getElementById("duplicate-entry-warning");
+const createDuplicateItem = document.getElementById("confirm-duplicate-btn");
+const cancelDuplicateItem = document.getElementById("cancel-duplicate-btn");
+
 
 // the elements in the div that shows information about a selected item
 const title = document.querySelector("#selected-item h2");
@@ -219,18 +284,13 @@ createNewItemBtn.addEventListener("click", () => {
     if (!newItemFormalName.value || !newItemName.value || !newItemQuantity.value || !newItemNormalPrice.value || !newItemBestPrice.value) {
         alert("All fields must be filled to create an item");
     } else {
-        addNewItemToData(newItemFormalName.value, newItemName.value, newItemQuantity.value, newItemUnit.value, newItemNormalPrice.value, newItemBestPrice.value);
-        addNewItem.close();
-        clearAddNewItemField();
-        userItemOptions();
+        checkIfDuplicate(newItemFormalName.value, newItemName.value, newItemQuantity.value, newItemUnit.value, newItemNormalPrice.value, newItemBestPrice.value);
     }
-    
 })
 
 
 // cancel add new item button
 cancelNewItem.addEventListener("click", () => {
-    addNewItem.close();
     clearAddNewItemField();
 })
 

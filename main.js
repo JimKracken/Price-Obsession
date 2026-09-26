@@ -2,12 +2,12 @@
 =============================================================
                      STUFF TO WORK ON
 =============================================================
-1. Remove starting div: stop showing the stuff about carrots
-2. Create a search bar: allow the user to type and see items with formal names that match what is in the search bar
-3. Show the best priced product for each kind of item: if a product has the best price out of all products with the 
+1. Create a search bar: allow the user to type and see items with formal names that match what is in the search bar
+2. Show the best priced product for each kind of item: if a product has the best price out of all products with the 
    same name, put a star next to it on the search bar and create a visual indicator when displaying the product
-4. Allow for comparison between units: show the price per different units
-5. Refine the GUI: make more modern
+3. Allow for comparison between units: show the price per different units
+4. Refine the GUI: make more modern
+5. Make a small-screen version of the GUI
 */
 
 // enables service worker
@@ -185,10 +185,35 @@ const userItemOptions = function() {
 
 
 
+// shows the section that shows information about an item when it is selected
+const showSelectedItemDiv = function() {
+    // makes the container div visible
+    selectedItem.hidden = false;
+    selectedItem.classList.add("visible");
+    // makes the elements of the container div visible
+    for (const child of selectedItemChildren) {
+        child.hidden = false;
+    }
+
+    // hides the sections that appear when a user wants to makes changes to an existing item
+    changeNormalPrice.hidden = true;
+    changeBestPrice.hidden = true;
+    changeUnit.hidden = true;
+    
+}
+
+
 // shows information for a selected item
 const showItem = function(formalItemName) {
+
     const userItems = getUserItems();
     const selectedItem = userItems[formalItemName];
+
+    // shows section that shows information about a selected item 
+    // only returns true the first time an item is selected from the search menu
+    if (selectedItem.hidden = true) {
+        showSelectedItemDiv();
+    }
 
     title.textContent = selectedItem.formalName;
     // display "100" before units in case of g or mL
@@ -241,6 +266,9 @@ const createDuplicateItem = document.getElementById("confirm-duplicate-btn");
 const cancelDuplicateItem = document.getElementById("cancel-duplicate-btn");
 
 
+/// shows information about a selected item
+const selectedItem = document.getElementById("selected-item");
+const selectedItemChildren = document.querySelectorAll("#selected-item *");
 // the elements in the div that shows information about a selected item
 const title = document.querySelector("#selected-item h2");
 const unitPriceHeading = document.querySelector("#price-per-heading label");
@@ -263,6 +291,10 @@ const changeNormalPrice = document.getElementById("change-normal-price");
 const changeBestPrice = document.getElementById("change-best-price");
 const changeUnit = document.getElementById("change-unit");
 
+
+for (const child of selectedItemChildren) {
+    child.hidden = true;
+}
 
 // search bar
 searchBar.addEventListener("change", () => {

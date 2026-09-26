@@ -61,7 +61,7 @@ dialog div:last-of-type {
     margin-right: 0.5rem;
 }
 
-#selected-item {
+#selected-item.visible{
     display: flex;
     flex-direction: column;
     padding: 0.5rem;

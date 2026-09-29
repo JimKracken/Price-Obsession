@@ -2,7 +2,7 @@
 =============================================================
                      STUFF TO WORK ON
 =============================================================
-1. Create a search bar: allow the user to type and see items with formal names that match what is in the search bar
+1. Refine search function: if user clicks out of search bar, collapse options; if an item has already been selected, options should flow over display, not push it down; set a mazimum amount for the space it can take up
 2. Show the best priced product for each kind of item: if a product has the best price out of all products with the 
    same name, put a star next to it on the search bar and create a visual indicator when displaying the product
 3. Allow for comparison between units: show the price per different units
@@ -23,6 +23,7 @@
 //       });
 //   });
 // }
+
 
 // checks if local storage already has items
 if (!localStorage.getItem("Data")) {
@@ -168,18 +169,30 @@ const clearAddNewItemField = function() {
     addNewItem.close();
     // updates list of items in search dropdown
     userItemOptions();
+    showAllSelectableItems();
 }
 
 
-// shows all of the user's items in the search bar
-const userItemOptions = function() {
-    const userItems = getUserItems();
-    // resets search bar's content
-    searchBar.innerHTML = "<option></option>";
+// shows use's items in the search bar
+const userItemOptions = function(items) {
+    searchedItemsContainer.innerHTML = "";
 
-    // displays the name of each item in the search bar
-    for (const key of Object.keys(userItems)) {
-        searchBar.innerHTML += `<option>${userItems[key].formalName}</option>`
+    // checks if search bar is selected
+    if (document.activeElement === searchBar) {
+        // shows all selected items, filtered or unfiltered
+        for (const key of Object.keys(items)) {
+            searchedItemsContainer.innerHTML += `<div class="selectable-item">${items[key].formalName}</div>`;
+        }
+    }
+
+    const selectableItems = document.querySelectorAll("#selectable-item-container .selectable-item");
+    // allows each div that shows an item's name in the search bar to be selected
+    for (const item of selectableItems) {
+        item.addEventListener("click", () => {
+            showItem(item.textContent);
+            searchedItemsContainer.innerHTML = "";
+            showAllSelectableItems();
+        })
     }
 } 
 
@@ -199,7 +212,6 @@ const showSelectedItemDiv = function() {
     changeNormalPrice.hidden = true;
     changeBestPrice.hidden = true;
     changeUnit.hidden = true;
-    
 }
 
 
@@ -245,8 +257,10 @@ const updateChangeUnit = function() {
 }
 
 
-// search bar
-const searchBar = document.getElementById("search-bar");
+// search bar and container that holds search results
+const searchBar = document.querySelector("#search-bar-container input");
+const searchedItemsContainer = document.getElementById("selectable-item-container");
+
 
 // elements used to collect user input to add a new item
 const addNewItemBtn = document.getElementById("add-new-item");
@@ -296,12 +310,49 @@ for (const child of selectedItemChildren) {
     child.hidden = true;
 }
 
-// search bar
-searchBar.addEventListener("change", () => {
-    if (searchBar.value) {
-        showItem(searchBar.value);
+
+
+const filterItems = function() {
+    const userItems = getUserItems();
+    const filter = new RegExp(searchBar.value.trim(), "i");
+    let filteredList = {};
+    for (const key of Object.keys(userItems)) {
+        if (key.match(filter)) {
+            filteredList[key] = userItems[key];
+        }
     }
+    if (filteredList) {
+        userItemOptions(filteredList);
+    } else {
+        userItemOptions(getUserItems());
+    }
+}
+
+
+
+// shows all selectable items after first click on the search bar
+const initSelectableItems = function() {
+    filterItems();
+    searchBar.removeEventListener("click", initSelectableItems);
+}
+
+
+// used to check for user's first click on the search bar after starting the program
+const showAllSelectableItems = function() {
+    searchBar.addEventListener("click", initSelectableItems); 
+}
+
+showAllSelectableItems();
+
+
+// checks if button on keyboard was pressed
+document.addEventListener("keyup", () => {
+    // checks if search bar is selected
+    if (document.activeElement.placeholder === "search item") {
+        filterItems();
+    } 
 })
+
 
 
 // add new item button
@@ -310,7 +361,7 @@ addNewItemBtn.addEventListener("click", () => {
 })
 
 
-// officially create new item button
+// adds new item to user items 
 createNewItemBtn.addEventListener("click", () => {
     // makes sure user inputted values for all fields before creating a new item
     if (!newItemFormalName.value || !newItemName.value || !newItemQuantity.value || !newItemNormalPrice.value || !newItemBestPrice.value) {
@@ -321,7 +372,7 @@ createNewItemBtn.addEventListener("click", () => {
 })
 
 
-// cancel add new item button
+// cancels adding new item 
 cancelNewItem.addEventListener("click", () => {
     clearAddNewItemField();
 })
@@ -371,6 +422,3 @@ changeUnitButton.addEventListener("click", () => {
 })
 
 
-
-// display initial elements on screen
-userItemOptions();

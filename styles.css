@@ -23,13 +23,53 @@ h1 {
     justify-content: center;
 }
 
-#search-bar {
-    display: inline-block;
-    height: 1.5rem;
-    width: 50%;
-    min-width: fit-content;
-    padding: 3px 10px;
+#search-bar-container {
     margin-right: 1rem;
+}
+
+
+#search-bar {
+    width: 100%;
+    min-width: 300px;
+    padding: 0.25rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+#selectable-item-container {
+    max-width: inherit;
+}
+
+.selectable-item {
+    padding: 2px;
+    border: 0.25px solid rgb(0, 0, 0);
+    min-width: 100px;
+    max-width: 300px;
+}
+
+.selectable-item:first-of-type {
+    border-radius: 8px 8px 0 0;
+}
+
+.selectable-item:last-of-type {
+    border-radius: 0 0 8px 8px;
+}
+
+.selectable-item:only-child {
+    border-radius: 8px;
+}
+
+.selectable-item:hover {
+    cursor: pointer;
+    background-color: hsl(0, 0%, 95%);
+    transform: scale(1.05);
+    transition: all 0.1s ease;
+}
+
+#add-new-item {
+    height: 1.5rem;
+    max-height: 1.5rem;
 }
 
 dialog {

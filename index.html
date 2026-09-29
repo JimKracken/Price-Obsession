@@ -10,9 +10,13 @@
   <body>
     <h1>Price Obsession</h1>
     <div id="search-and-add-container">
-      <select id="search-bar"></select>
+      <div id="search-bar-container">
+        <input id="search-bar" placeholder="search item">
+        <div id="selectable-item-container"></div>
+      </div>
       <button id="add-new-item">Add New Item</button>
     </div>
+
     <dialog id="add-new-item-dialog">
       <dialog id="duplicate-entry-warning"><p><label></label> already exists. Are you sure you would like to overwrite its information with this new item?</p><button id="confirm-duplicate-btn">Yes</button><button id="cancel-duplicate-btn">No</button></dialog>
       <div>
